@@ -10,13 +10,17 @@ import time
 ports = mido.get_output_names()
 port = mido.open_output(ports[0])
 print("port:", port)
+ser = serial.Serial("/dev/cu.usbserial-1410", 9600, timeout=None) 
+
 print("please input the filename")
 filename = input()
 mid = MidiFile(filename)
 tempo_original = 500000 #us 元のテンポ設定
 bpm_changed = 120
-ser = serial.Serial("/dev/cu.usbserial-14110", 9600, timeout=None) 
 not_used = ser.readline()
+for i in range(10):
+   not_used = ser.readline()
+
 
 with port as outport:
     for i, msg in enumerate(mid):
@@ -27,6 +31,7 @@ with port as outport:
         tempo_changed = mido.bpm2tempo(bpm_changed)
         x = msg.time * tempo_changed / tempo_original
         time.sleep(x)
+        print(msg)
         if not msg.is_meta:
             port.send(msg)
         elif msg.type == "set_tempo":

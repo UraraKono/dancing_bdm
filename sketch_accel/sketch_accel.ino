@@ -7,7 +7,7 @@
 
 MMA8452Q accel;                   // create instance of the MMA8452 class
 
-float BEATTIME;
+int BEATTIME = 60;
 // 時間差分
 float timeSpan = 0.1;
 // ひとつ前の加速度
@@ -39,9 +39,10 @@ float get_beattime(){
     //Serial.print(ACCEL, 3);
     //Serial.print("\t");
     //Serial.println(Speed, 3);
-    int tempo = BEATTIME_ORIG/Speed;
-    Serial.println(tempo);
-    return BEATTIME_ORIG/Speed;
+    int tempo = BEATTIME_ORIG*1.5*Speed-50;
+    //int tempo = BEATTIME_ORIG*0.6*ACCEL;
+    //Serial.println(tempo);
+    return tempo;
   }
   else return BEATTIME_ORIG;
 }
@@ -55,10 +56,20 @@ void setup() {
     Serial.println("Not Connected. Please check connections and read the hookup guide.");
     while (1);
   }
-
+  for(int i = 0; i < 10; i++){
+    delay(1000);
+    get_beattime();
+  }
 }
 
 void loop() {
-  BEATTIME = get_beattime();
-  delay(1000);
+  digitalWrite(13, HIGH);
+  for(int i = 0; i < 10; i++){ 
+    BEATTIME = get_beattime();
+    if(i == 9){
+      Serial.println(BEATTIME);
+    }
+    delay(60/float(BEATTIME)*1000/10);
+  }
+  digitalWrite(13, LOW);
 }
