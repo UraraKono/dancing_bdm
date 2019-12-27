@@ -30,7 +30,7 @@ with port as outport:
     for i, msg in enumerate(mid):
         if ser.inWaiting() > 0:
             val_arduino = ser.readline()
-            print("tempo:", int(val_arduino.decode()) * 2
+            print("tempo:", int(val_arduino.decode()) * 2)
             bpm_changed = int(val_arduino.decode())
         tempo_changed = mido.bpm2tempo(bpm_changed)
         x = msg.time * tempo_changed / tempo_original
