@@ -31,7 +31,7 @@ with port as outport:
         if ser.inWaiting() > 0:
             val_arduino = ser.readline()
             print("tempo:", int(val_arduino.decode()) * 2)
-            bpm_changed = int(val_arduino.decode())
+            bpm_changed = int(val_arduino.decode()) * 2
         tempo_changed = mido.bpm2tempo(bpm_changed)
         x = msg.time * tempo_changed / tempo_original
         time.sleep(x)

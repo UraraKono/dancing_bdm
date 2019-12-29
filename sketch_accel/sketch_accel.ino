@@ -54,7 +54,7 @@ int get_beattime(){
 
 void setup() {
   vw_set_tx_pin(SEND_PIN);
-  vw_setup(7000);
+  vw_setup(5000);
   
   Serial.begin(9600);
   Serial.println("MMA8452Q Basic Reading Code!");
@@ -63,26 +63,25 @@ void setup() {
     Serial.println("Not Connected. Please check connections and read the hookup guide.");
     while (1);
   }
+  //10秒待つ
   for(int i = 0; i < 10; i++){
     delay(1000);
     get_beattime();
   }
 }
 
+//uint8_t sign = 0;
+uint8_t msg;
 void loop() {
-  char char_tempo[1];
   digitalWrite(13, HIGH);
   for(int i = 0; i < 10; i++){ 
     BEATTIME = get_beattime();
-    if(i == 9){
-      Serial.println(BEATTIME);
-      char_tempo[0] = (char)BEATTIME;
-      vw_send((uint8_t *)char_tempo, 1);
-      vw_wait_tx();
-    }
-//    delay(60/float(BEATTIME)*1000/10);
- delay(60/float(BEATTIME_ORIG)*1000/10);
-
+    delay(60/float(BEATTIME)*1000/10);
+    //delay(60/float(BEATTIME_ORIG)*1000/10);
   }
+  Serial.println(BEATTIME);
+  msg = (uint8_t)BEATTIME;
+  vw_send(&msg, 1);
+  vw_wait_tx();
   digitalWrite(13, LOW);
 }
